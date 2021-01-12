@@ -39,7 +39,7 @@ i.e. the total number of ILI + pneumonia cases observed on that day. In
 this dataframe, both overcrowdedness and multigenerational housing are
 binned into quartiles.
 
-![](DesignMatrixSetup.png)
+![](https://user-images.githubusercontent.com/6864298/104348006-3c34f880-54cf-11eb-8775-310a7b2f9e7a.png)
 
 ``` r
 # Design matrix construction
@@ -228,6 +228,26 @@ kable(vif(model3.ILIpneu))
 | MedianIncome            | 5.671430 |  1 |         2.381476 |
 | PctEssEmpl              | 2.085771 |  1 |         1.444220 |
 
+``` r
+# Print model results
+kable(Print.Model.Results.GLM(model3.ILIpneu, 2))
+```
+
+|                           | exp(Estimate) |   p-value | 2.5 % | 97.5 % |
+| :------------------------ | ------------: | --------: | ----: | -----: |
+| (Intercept)               |          3.35 | 0.0000000 |  2.40 |   4.68 |
+| Time                      |          1.04 | 0.0000000 |  1.04 |   1.05 |
+| ordered(PctOvercrowded).L |          1.40 | 0.0000000 |  1.33 |   1.48 |
+| ordered(PctOvercrowded).Q |          0.92 | 0.0000165 |  0.88 |   0.95 |
+| ordered(PctOvercrowded).C |          1.08 | 0.0000176 |  1.04 |   1.12 |
+| ordered(PctMultigen).L    |          1.19 | 0.0000000 |  1.11 |   1.27 |
+| ordered(PctMultigen).Q    |          1.08 | 0.0005208 |  1.03 |   1.13 |
+| ordered(PctMultigen).C    |          1.01 | 0.5947140 |  0.97 |   1.05 |
+| PctWhite                  |          1.00 | 0.0000000 |  0.99 |   1.00 |
+| PctBelowPovThresh         |          0.99 | 0.0000000 |  0.98 |   0.99 |
+| MedianIncome              |          1.00 | 0.0000000 |  1.00 |   1.00 |
+| PctEssEmpl                |          0.98 | 0.0000000 |  0.97 |   0.99 |
+
 #### Model 4: Add both clinical and socioeconomic covariates to model 1
 
 ``` r
@@ -319,6 +339,29 @@ kable(vif(model4.ILIpneu))
 | MedianIncome            | 8.308585 |  1 |         2.882462 |
 | PctEssEmpl              | 2.576829 |  1 |         1.605250 |
 
+``` r
+# Print model results
+kable(Print.Model.Results.GLM(model4.ILIpneu, 2))
+```
+
+|                           | exp(Estimate) |   p-value | 2.5 % | 97.5 % |
+| :------------------------ | ------------: | --------: | ----: | -----: |
+| (Intercept)               |         33.55 | 0.0000000 | 22.34 |  50.40 |
+| Time                      |          1.04 | 0.0000000 |  1.04 |   1.05 |
+| ordered(PctOvercrowded).L |          1.41 | 0.0000000 |  1.33 |   1.49 |
+| ordered(PctOvercrowded).Q |          0.95 | 0.0059445 |  0.91 |   0.98 |
+| ordered(PctOvercrowded).C |          0.99 | 0.4737752 |  0.96 |   1.02 |
+| ordered(PctMultigen).L    |          1.38 | 0.0000000 |  1.29 |   1.48 |
+| ordered(PctMultigen).Q    |          0.97 | 0.2303401 |  0.93 |   1.02 |
+| ordered(PctMultigen).C    |          0.99 | 0.4597685 |  0.96 |   1.02 |
+| CHD\_CrudePrev            |          0.75 | 0.0000000 |  0.73 |   0.78 |
+| OBESITY\_CrudePrev        |          1.03 | 0.0000000 |  1.03 |   1.04 |
+| CSMOKING\_CrudePrev       |          0.98 | 0.0001945 |  0.96 |   0.99 |
+| PctWhite                  |          1.00 | 0.8339932 |  1.00 |   1.00 |
+| PctBelowPovThresh         |          0.97 | 0.0000000 |  0.97 |   0.98 |
+| MedianIncome              |          1.00 | 0.0000000 |  1.00 |   1.00 |
+| PctEssEmpl                |          0.96 | 0.0000000 |  0.95 |   0.97 |
+
 #### Model 5: Bayesian spatiotemporal model, using model 4 covariates
 
 ``` r
@@ -330,23 +373,25 @@ designResponse$ZipID2 <- zipcodeID
 # Construct spatiotemporal model using same set of covariates in (reduced) model 4
 model5.INLAformula <- Count ~ 1 + f(ZipID, model="bym", offset(Population/10000), graph=NYCadj) + f(ZipID2, Time, model="rw1") + Time + ordered(PctOvercrowded) + ordered(PctMultigen) + CHD_CrudePrev + OBESITY_CrudePrev + CSMOKING_CrudePrev + PctWhite + PctBelowPovThresh + MedianIncome + PctEssEmpl
 model5.INLA <- inla(model5.INLAformula, family="poisson", data=designResponse, control.compute=list(dic=TRUE,cpo=TRUE))
-kable(Print.Model.Results.INLA(model5.INLA, 6))
+
+# Print model results
+kable(Print.Model.Results.INLA(model5.INLA, 2))
 ```
 
-|                           | exp(Estimate) |        SD | 0.025quant | 0.975quant |      mode |
-| :------------------------ | ------------: | --------: | ---------: | ---------: | --------: |
-| (Intercept)               |     15.613213 | 0.8217829 |   3.073092 |  77.607986 | 15.795646 |
-| Time                      |      1.040350 | 0.0008313 |   1.038642 |   1.042037 |  1.040362 |
-| ordered(PctOvercrowded).L |      1.401975 | 0.1445271 |   1.058248 |   1.867164 |  1.397868 |
-| ordered(PctOvercrowded).Q |      0.902654 | 0.0943710 |   0.749950 |   1.086741 |  0.902435 |
-| ordered(PctOvercrowded).C |      1.140009 | 0.0878159 |   0.961780 |   1.358134 |  1.136941 |
-| ordered(PctMultigen).L    |      1.549097 | 0.1667621 |   1.111431 |   2.141446 |  1.555782 |
-| ordered(PctMultigen).Q    |      0.797066 | 0.1076032 |   0.644002 |   0.983245 |  0.798414 |
-| ordered(PctMultigen).C    |      0.963156 | 0.0930177 |   0.801567 |   1.155610 |  0.963817 |
-| CHD\_CrudePrev            |      0.922837 | 0.0576141 |   0.824977 |   1.034373 |  0.921792 |
-| OBESITY\_CrudePrev        |      0.967290 | 0.0154396 |   0.937756 |   0.996402 |  0.968032 |
-| CSMOKING\_CrudePrev       |      1.076362 | 0.0409342 |   0.995350 |   1.168822 |  1.073878 |
-| PctWhite                  |      0.995736 | 0.0036233 |   0.988593 |   1.002780 |  0.995813 |
-| PctBelowPovThresh         |      0.973244 | 0.0127931 |   0.948814 |   0.997758 |  0.973521 |
-| MedianIncome              |      0.999980 | 0.0000027 |   0.999974 |   0.999985 |  0.999980 |
-| PctEssEmpl                |      1.008430 | 0.0138817 |   0.981267 |   1.036257 |  1.008460 |
+|                           | exp(Estimate) |        SD | 0.025quant | 0.975quant |  mode |
+| :------------------------ | ------------: | --------: | ---------: | ---------: | ----: |
+| (Intercept)               |         15.61 | 0.8218564 |       3.07 |      77.58 | 15.79 |
+| Time                      |          1.04 | 0.0008312 |       1.04 |       1.04 |  1.04 |
+| ordered(PctOvercrowded).L |          1.40 | 0.1445478 |       1.06 |       1.87 |  1.40 |
+| ordered(PctOvercrowded).Q |          0.90 | 0.0943866 |       0.75 |       1.09 |  0.90 |
+| ordered(PctOvercrowded).C |          1.14 | 0.0878342 |       0.96 |       1.36 |  1.14 |
+| ordered(PctMultigen).L    |          1.55 | 0.1667928 |       1.11 |       2.14 |  1.56 |
+| ordered(PctMultigen).Q    |          0.80 | 0.1076207 |       0.64 |       0.98 |  0.80 |
+| ordered(PctMultigen).C    |          0.96 | 0.0930378 |       0.80 |       1.16 |  0.96 |
+| CHD\_CrudePrev            |          0.92 | 0.0576206 |       0.82 |       1.03 |  0.92 |
+| OBESITY\_CrudePrev        |          0.97 | 0.0154453 |       0.94 |       1.00 |  0.97 |
+| CSMOKING\_CrudePrev       |          1.08 | 0.0409465 |       1.00 |       1.17 |  1.07 |
+| PctWhite                  |          1.00 | 0.0036241 |       0.99 |       1.00 |  1.00 |
+| PctBelowPovThresh         |          0.97 | 0.0127953 |       0.95 |       1.00 |  0.97 |
+| MedianIncome              |          1.00 | 0.0000027 |       1.00 |       1.00 |  1.00 |
+| PctEssEmpl                |          1.01 | 0.0138821 |       0.98 |       1.04 |  1.01 |

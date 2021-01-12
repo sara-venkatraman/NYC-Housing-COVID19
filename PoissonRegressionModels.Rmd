@@ -52,7 +52,7 @@ zctaOrder <- allZipcodes[shpOrder]
 
 The next few lines of code produce a dataframe ("design matrix") of the following form. Below, "Case count" refers to the suspected cases, i.e. the total number of ILI + pneumonia cases observed on that day. In this dataframe, both overcrowdedness and multigenerational housing are binned into quartiles.
 
-![](DesignMatrixSetup.png){width=70%}
+![](https://user-images.githubusercontent.com/6864298/104348006-3c34f880-54cf-11eb-8775-310a7b2f9e7a.png){width=70%}
 ```{r}
 # Design matrix construction
 designResponse.ili <- Concatenate.Zipcode.Data(zctaOrder, "influenza", "2020-03-16", variablesToDiscretize=c("PctOvercrowded", "PctMultigen"), quartile=T)
@@ -153,6 +153,9 @@ model3.ILIpneu <- glm(Count ~ Time + ordered(PctOvercrowded) + ordered(PctMultig
 
 # Check variance inflation factors. No variables need to be removed.
 kable(vif(model3.ILIpneu))
+
+# Print model results
+kable(Print.Model.Results.GLM(model3.ILIpneu, 2))
 ```
 
 #### Model 4: Add both clinical and socioeconomic covariates to model 1 
@@ -180,6 +183,9 @@ model4.ILIpneu <- glm(Count ~ Time + ordered(PctOvercrowded) + ordered(PctMultig
 
 # Check variance inflation factors. No more variables need to be removed.
 kable(vif(model4.ILIpneu))
+
+# Print model results
+kable(Print.Model.Results.GLM(model4.ILIpneu, 2))
 ```
 
 #### Model 5: Bayesian spatiotemporal model, using model 4 covariates
@@ -193,5 +199,7 @@ designResponse$ZipID2 <- zipcodeID
 # Construct spatiotemporal model using same set of covariates in (reduced) model 4
 model5.INLAformula <- Count ~ 1 + f(ZipID, model="bym", offset(Population/10000), graph=NYCadj) + f(ZipID2, Time, model="rw1") + Time + ordered(PctOvercrowded) + ordered(PctMultigen) + CHD_CrudePrev + OBESITY_CrudePrev + CSMOKING_CrudePrev + PctWhite + PctBelowPovThresh + MedianIncome + PctEssEmpl
 model5.INLA <- inla(model5.INLAformula, family="poisson", data=designResponse, control.compute=list(dic=TRUE,cpo=TRUE))
-kable(Print.Model.Results.INLA(model5.INLA, 6))
+
+# Print model results
+kable(Print.Model.Results.INLA(model5.INLA, 2))
 ```
