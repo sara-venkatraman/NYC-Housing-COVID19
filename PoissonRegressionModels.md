@@ -1,4 +1,4 @@
-Models for Table 2
+Poisson regression models (Table 2 of manuscript)
 ================
 Sara Venkatraman
 1/12/2021
@@ -380,18 +380,18 @@ kable(Print.Model.Results.INLA(model5.INLA, 2))
 
 |                           | exp(Estimate) |        SD | 0.025quant | 0.975quant |  mode |
 | :------------------------ | ------------: | --------: | ---------: | ---------: | ----: |
-| (Intercept)               |         15.61 | 0.8218564 |       3.07 |      77.58 | 15.79 |
+| (Intercept)               |         15.60 | 0.8218463 |       3.07 |      77.56 | 15.78 |
 | Time                      |          1.04 | 0.0008312 |       1.04 |       1.04 |  1.04 |
-| ordered(PctOvercrowded).L |          1.40 | 0.1445478 |       1.06 |       1.87 |  1.40 |
-| ordered(PctOvercrowded).Q |          0.90 | 0.0943866 |       0.75 |       1.09 |  0.90 |
-| ordered(PctOvercrowded).C |          1.14 | 0.0878342 |       0.96 |       1.36 |  1.14 |
-| ordered(PctMultigen).L    |          1.55 | 0.1667928 |       1.11 |       2.14 |  1.56 |
-| ordered(PctMultigen).Q    |          0.80 | 0.1076207 |       0.64 |       0.98 |  0.80 |
-| ordered(PctMultigen).C    |          0.96 | 0.0930378 |       0.80 |       1.16 |  0.96 |
-| CHD\_CrudePrev            |          0.92 | 0.0576206 |       0.82 |       1.03 |  0.92 |
-| OBESITY\_CrudePrev        |          0.97 | 0.0154453 |       0.94 |       1.00 |  0.97 |
-| CSMOKING\_CrudePrev       |          1.08 | 0.0409465 |       1.00 |       1.17 |  1.07 |
-| PctWhite                  |          1.00 | 0.0036241 |       0.99 |       1.00 |  1.00 |
-| PctBelowPovThresh         |          0.97 | 0.0127953 |       0.95 |       1.00 |  0.97 |
+| ordered(PctOvercrowded).L |          1.40 | 0.1445459 |       1.06 |       1.87 |  1.40 |
+| ordered(PctOvercrowded).Q |          0.90 | 0.0943849 |       0.75 |       1.09 |  0.90 |
+| ordered(PctOvercrowded).C |          1.14 | 0.0878326 |       0.96 |       1.36 |  1.14 |
+| ordered(PctMultigen).L    |          1.55 | 0.1667906 |       1.11 |       2.14 |  1.56 |
+| ordered(PctMultigen).Q    |          0.80 | 0.1076197 |       0.64 |       0.98 |  0.80 |
+| ordered(PctMultigen).C    |          0.96 | 0.0930359 |       0.80 |       1.16 |  0.96 |
+| CHD\_CrudePrev            |          0.92 | 0.0576192 |       0.82 |       1.03 |  0.92 |
+| OBESITY\_CrudePrev        |          0.97 | 0.0154442 |       0.94 |       1.00 |  0.97 |
+| CSMOKING\_CrudePrev       |          1.08 | 0.0409450 |       1.00 |       1.17 |  1.07 |
+| PctWhite                  |          1.00 | 0.0036240 |       0.99 |       1.00 |  1.00 |
+| PctBelowPovThresh         |          0.97 | 0.0127951 |       0.95 |       1.00 |  0.97 |
 | MedianIncome              |          1.00 | 0.0000027 |       1.00 |       1.00 |  1.00 |
-| PctEssEmpl                |          1.01 | 0.0138821 |       0.98 |       1.04 |  1.01 |
+| PctEssEmpl                |          1.01 | 0.0138819 |       0.98 |       1.04 |  1.01 |

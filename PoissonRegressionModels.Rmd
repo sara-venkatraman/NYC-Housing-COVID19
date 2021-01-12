@@ -1,5 +1,5 @@
 ---
-title: "Models for Table 2"
+title: "Poisson regression models (Table 2 of manuscript)"
 author: "Sara Venkatraman"
 date: "1/12/2021"
 output: rmarkdown::github_document
